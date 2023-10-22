@@ -28,9 +28,10 @@ in the reference.
 # Instructions
 ## Preparing a Host
 ### Install `CRI-O` Container Runtime 
-Install a **container runtime: `CRI-O`** and **`kubeadm`** on all the hosts.
 
 > NOTE: I am using `cri-o` instead if `containerd` because, in Kubernetes certification exams, `cri-o` is used as the container runtime in the exam clusters.
+
+> This step should be done on all 3 Control Plane nodes
 
 To install on the `APT` based operating systems, set the environment variable **`$OS`** to the appropriate value from the following table:
 
