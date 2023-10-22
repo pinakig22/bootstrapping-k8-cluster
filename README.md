@@ -18,13 +18,12 @@ This setup is deployed on AWS Infrastructure. Details as below.
 This is in line with, _System Requirements_ defined under "Before You Begin" in "Creating a cluster with kubeadm" 
 in the reference.
 
-1. AMI Used: Amazon Linux 2 AMI 2.0.20220606.1 x86_64 HVM gp2 (ami-09de362f44ba0a166) (AMI ID is different in 
-   different AWS region. This is from Mumbai region)
-   1. 
+1. AMI Used: Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (ami-0287a05f0ef0e9d9a) (AMI IDs are different in different AWS region. This is from Mumbai region)
 2. Instances:
    1. Bastion Host: Acts as jump host to connect to control and worker nodes.
    2. 3 x Control Nodes: t3a.medium
    3. 3 x Worker Nodes: t3a.small
+3. All instances are managed via AutoScaling and Launch Templates.
 
 # Instructions
 ## Preparing a Host
@@ -33,15 +32,21 @@ Install a **container runtime: `CRI-O`** and **`kubeadm`** on all the hosts.
 
 > NOTE: I am using `cri-o` instead if `containerd` because, in Kubernetes certification exams, `cri-o` is used as the container runtime in the exam clusters.
 
-To install on the following `yum` based operating systems, set the environment variable **`$OS`** to the appropriate value from 
-the following table:
+To install on the `APT` based operating systems, set the environment variable **`$OS`** to the appropriate value from the following table:
 
-| Operating system | $OS               |
-| ---------------- | ----------------- |
-| Centos 9 Stream  | `CentOS_9_Stream` |
-| Centos 8         | `CentOS_8`        |
-| Centos 8 Stream  | `CentOS_8_Stream` |
-| Centos 7         | `CentOS_7`        |
+| Operating system   | $OS               |
+| ------------------ | ----------------- |
+| Debian 12          | `Debian_12`       |
+| Debian 11          | `Debian_11`       |
+| Debian 10          | `Debian_10`       |
+| Raspberry Pi OS 11 | `Raspbian_11`     |
+| Raspberry Pi OS 10 | `Raspbian_10`     |
+| Ubuntu 22.04       | `xUbuntu_22.04`   |
+| Ubuntu 21.10       | `xUbuntu_21.10`   |
+| Ubuntu 21.04       | `xUbuntu_21.04`   |
+| Ubuntu 20.10       | `xUbuntu_20.10`   |
+| Ubuntu 20.04       | `xUbuntu_20.04`   |
+| Ubuntu 18.04       | `xUbuntu_18.04`   |
 
 ```shell
 # Install CRI-O Runtime #
