@@ -27,7 +27,7 @@ in the reference.
 
 # Instructions
 ## Preparing a Host
-### Container Runtime Install 
+### Install `CRI-O` Container Runtime 
 Install a **container runtime: `CRI-O`** and **`kubeadm`** on all the hosts.
 
 > NOTE: I am using `cri-o` instead if `containerd` because, in Kubernetes certification exams, `cri-o` is used as the container runtime in the exam clusters.
@@ -53,26 +53,61 @@ To install on the `APT` based operating systems, set the environment variable **
 
 ## Run the following as root ##
 ## Do this on all Control plane nodes ##
-yum update
+apt update -y
+
+## Disable swap &  turn off during reboots ##
+swapoff -a
+(crontab -l 2>/dev/null; echo "@reboot /sbin/swapoff -a") | crontab - || true
 
 ## This is Operating system version as per above instruction ##
-export OS="CentOS_8"  
+export OS="xUbuntu_22.04"  
 
-## This is kubernetes version ##
+## This is kubernetes version for which CRI-O will be installed ##
 export VERSION="1.27"
 
-curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
-curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+## Create the .conf file to load the modules at bootup ##
+cat <<EOF | sudo tee /etc/modules-load.d/crio.conf
+overlay
+br_netfilter
+EOF
 
-or if you are using a subproject release:
+sudo modprobe overlay
+sudo modprobe br_netfilter
 
-curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:${VERSION}.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/${SUBVERSION}:/${VERSION}/$OS/devel:kubic:libcontainers:stable:cri-o:${SUBVERSION}:${VERSION}.repo
+## Set up required sysctl params, these persist across reboots. ##
 
-yum install cri-o
+cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+
+### verify systctl params ###
+sysctl --system|grep net.bridge.
+sysctl --system|grep net.ipv4.ip_forward
+
+echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/ /" > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.list
+
+mkdir -p /usr/share/keyrings
+
+curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
+curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$VERSION/$OS/Release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+
+apt-get update
+apt-get install cri-o cri-o-runc
+
+## Reload systemd manager configuration ##
+systemctl daemon-reload
+
+## Enable to start at boot ##
+systemctl enable crio --now
+
+## Start crio service and verify status ##
+systemctl start crio.service
+systemctl status crio.service
 ```
 
-
-### Install `CRI-O` Container Runtime
 
  
 
