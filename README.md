@@ -1,5 +1,9 @@
 # Bootstrapping clusters with `kubeadm`
-In this repo, I have covered setting a High Available Kubernetes cluster using `Kubernetes version: v1.27`. `ETCD` is deployed in stacked node, i.e. the `etcd` members and `control plane` nodes are co-located.
+In this repo, I have covered setting a High Available Kubernetes cluster using `Kubernetes version: v1.27`. 
+
+`ETCD` is deployed in **stacked** mode, i.e. the `etcd` members and `control plane` nodes are co-located.
+
+![Stacked etcd topology](media/kubeadm-ha-topology-stacked-etcd.svg)
 
 Using `kubeadm`, you can create a minimum viable Kubernetes cluster that conforms to best practices.
 
