@@ -14,4 +14,4 @@ To achieve **High Availability**, following is the setup:
 
 ## Step by Step Instructions
 1. [Infrastructure](1.%20INFRASTRUCTURE)
-2. [Preparing Host](2. Node Setup)
+2. [Preparing Host](2.%20Node%20Setup)
