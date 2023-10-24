@@ -15,3 +15,7 @@ To achieve **High Availability**, following is the setup:
 ## Step by Step Instructions
 1. [Infrastructure](1.%20INFRASTRUCTURE)
 2. [Preparing Host](2.%20Node%20Setup)
+
+
+## Future Task
+Once manual setup is done, the next step will be to automate bootstrapping a k8 cluster using Ansible and Terraform.
