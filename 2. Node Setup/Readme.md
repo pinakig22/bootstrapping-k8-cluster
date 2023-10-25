@@ -134,8 +134,21 @@ apt-get install -y kubelet=1.27.7-00 kubeadm=1.27.7-00 kubectl=1.27.7-00
 
 ## Add hold to the packages to prevent upgrades ##
 apt-mark hold kubelet kubeadm kubectl
+
+## Add node IP to KUBELET_EXTRA_ARGS
+apt-get install -y jq
+
+local_ip="$(ip --json addr show ens5| jq -r '.[0].addr_info[] | select(.family == "inet") | .local')"
+
+### Alternate to get the node IP ##
+### local_ip="`ip addr|grep "inet "| awk -F'[: ]+' '{ print $3 }'|grep -v 127|cut -d"/" -f1`" 
+
+cat <<EOF | sudo tee /etc/default/kubelet
+KUBELET_EXTRA_ARGS=--node-ip=$local_ip
+EOF
 ```
 
 ## References
 - [CRI-O Installation Instructions - Ubuntu](https://github.com/cri-o/cri-o/blob/main/install.md#apt-based-operating-systems)
 - [Installing Kubernetes 1.27](https://v1-27.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+- [Installing `kubectl`](https://v1-27.docs.kubernetes.io/docs/tasks/tools/install-kubectl-linux/)

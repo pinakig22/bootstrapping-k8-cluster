@@ -83,3 +83,31 @@ sudo systemctl enable crio --now
 systemctl start crio.service
 
 echo "CRI runtime installed successfully"
+
+########################################
+# Install kubeadm, kubelet and kubectl #
+########################################
+# Update the apt package index and install packages needed to use the Kubernetes apt repository ##
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+
+# Download the Google Cloud public signing key ##
+curl -fsSL https://dl.k8s.io/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+
+# Add the Kubernetes apt repository ##
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+## Update apt package index, install kubelet, kubeadm and kubectl, and pin their version ##
+sudo apt-get update -y
+KUBERNETES_VERSION=`sudo apt-cache madison kubeadm | tac|grep "1.27"|tail -1|awk '{print $3}'`
+sudo apt-get install -y kubelet="$KUBERNETES_VERSION" kubeadm="$KUBERNETES_VERSION" kubectl="$KUBERNETES_VERSION"
+sudo apt-mark hold kubelet kubeadm kubectl
+
+## Add node IP to KUBELET_EXTRA_ARGS
+local_ip="`ip addr|grep "inet "| awk -F'[: ]+' '{ print $3 }'|grep -v 127|cut -d"/" -f1`"
+
+cat <<EOF | sudo tee /etc/default/kubelet
+KUBELET_EXTRA_ARGS=--node-ip=$local_ip
+EOF
