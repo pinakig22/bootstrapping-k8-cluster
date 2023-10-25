@@ -21,16 +21,16 @@ in the reference.
 6. **Security Groups** are created as defined in Kubernetes documentation [Ports and Protocols](https://kubernetes.io/docs/reference/networking/ports-and-protocols/). Reference as below.
    
    **Control Plane Ingress**
-   ![control plane ingress](../media/control_plane_ingress.png)
+   ![control plane ingress](../../media/control_plane_ingress.png)
 
    **Control Plane Egress**
-   ![control plane egress](../media/control_plane_egress.png)
+   ![control plane egress](../../media/control_plane_egress.png)
 
    **Worker Node Ingress**
-   ![worker node ingress](../media/worker_node_ingress.png)
+   ![worker node ingress](../../media/worker_node_ingress.png)
 
    **Worker Node Egress**
-   ![worker node egress](../media/worker_node_egress.png)
+   ![worker node egress](../../media/worker_node_egress.png)
 
 7. TBC
 

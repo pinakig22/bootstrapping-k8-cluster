@@ -1,12 +1,16 @@
 # Bootstrapping clusters with `kubeadm`
-In this repo, I have covered setting a High Available Kubernetes cluster using `Kubernetes version: v1.27`. 
+In this repo, I have covered setting a NON-HA (**single** `control-plane`) & High Available Kubernetes cluster using `Kubernetes version: v1.27`. 
 
-`ETCD` is deployed in **stacked** mode, i.e. the `etcd` members and `control plane` nodes are co-located.
+In HA Setup, `ETCD` is deployed in **stacked** mode, i.e. the `etcd` members and `control plane` nodes are co-located.
 
-### Architecture
+### Non-HA Architecture (single control-plane)
+System requirements:
+- One or more machine running a deb/rpm-compatible Linux OS; for example: Ubuntu or CentOS.
+- 2 GiB of RAM per machine.
+- At least 2 CPUs on the machine used as `control-plane` node.
+- Full network connectivity among all machines in the cluster. You can use either a public or a private network.
+### High Availability Architecture
 ![Stacked etcd topology](media/kubeadm-ha-topology-stacked-etcd.png)
-
-Using `kubeadm`, you can create a minimum viable Kubernetes cluster that conforms to best practices.
 
 To achieve **High Availability**, following is the setup:
 - **3 Control Plane** nodes (Master node).
@@ -17,9 +21,14 @@ To achieve **High Availability**, following is the setup:
   - This load balancer distributes traffic to all healthy control plane nodes in its target list.
     - The health check for an `apiserver` is a TCP check on the port the `kube-apiserver` listens on (default value `:6443`). 
 
-## Step by Step Instructions
-1. [Infrastructure](1.%20INFRASTRUCTURE)
-2. [Preparing Host](2.%20Node%20Setup)
+## High Level Steps
+1. Install Container Runtime
+2. Install `kubeadm`, `kubelet` & `kubectl`
+3. Install Pod network add-on
+
+## Instructions
+1. [Non-HA](Non-HA)
+2. [HA](HA)
 
 
 ## Future Task

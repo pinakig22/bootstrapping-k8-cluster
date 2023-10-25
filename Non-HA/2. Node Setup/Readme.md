@@ -109,6 +109,17 @@ These packages will be installed on all the machines
 
 > **Note:** In releases older than Debian 12 and Ubuntu 22.04, /etc/apt/keyrings does not exist by default. You can create this directory if you need to, making it world-readable but writeable only by admins.
 
+**`kubeadm init`** first runs a series of pre-checks to ensure that the machine is ready to run Kubernetes. 
+
+These pre-checks expose warnings and exit on errors. 
+
+`kubeadm init` then downloads and installs the cluster control plane components. This may take several minutes. 
+
+After it finishes you should see as below:
+
+![init](../../media/kubeadm-init.png)
+
+### Commands ##
 ```shell
 # Install #
 ## Run the following as root ##
@@ -146,9 +157,53 @@ local_ip="$(ip --json addr show ens5| jq -r '.[0].addr_info[] | select(.family =
 cat <<EOF | sudo tee /etc/default/kubelet
 KUBELET_EXTRA_ARGS=--node-ip=$local_ip
 EOF
+
+################################################
+# Initialize kubeadm based on PUBLIC_IP_ACCESS #
+################################################
+
+### Extract private IP and hostname into variable to pass to kubeadm init command ###
+IPADDR="`ip addr|grep "inet "| awk -F'[: ]+' '{ print $3 }'|grep -v 127|cut -d"/" -f1`"
+NODENAME=$(hostname -s)
+POD_CIDR="192.168.0.0/16"
+
+kubeadm init --apiserver-advertise-address=$IPADDR  --apiserver-cert-extra-sans=$IPADDR  --pod-network-cidr=$POD_CIDR --node-name $NODENAME --ignore-preflight-errors Swap
+
+#----------------------#
+# In case of Public IP #
+#----------------------#
+## Only the IPADDR variables is the only change in comparison to above. ##
+IPADDR=$(curl ifconfig.me && echo "")
+
+## Configure kubeconfig ##
+## These instructions are part of output once Kubernetes control plane (using kubeadm init as above) is successfully initialized.
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+### If doing as root user ###
+export KUBECONFIG=/etc/kubernetes/admin.conf
 ```
+
+## Install Network Add-on
+We are installing Calico Network Plugin
+
+```shell
+## Install the Tigera Calico operator and custom resource definitions ##
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.3/manifests/tigera-operator.yaml
+
+## Install Calico by creating the necessary custom resource. For more information on configuration options available in this manifest ##
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.3/manifests/custom-resources.yaml
+
+## Confirm that all of the pods are running with the following command. ##
+## Wait until each pod has the STATUS of Running. ##
+watch kubectl get pods -n calico-system
+```
+
 
 ## References
 - [CRI-O Installation Instructions - Ubuntu](https://github.com/cri-o/cri-o/blob/main/install.md#apt-based-operating-systems)
 - [Installing Kubernetes 1.27](https://v1-27.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 - [Installing `kubectl`](https://v1-27.docs.kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+- [Installing Addons (Pod Network addons)](https://kubernetes.io/docs/concepts/cluster-administration/addons/)
+- [Install Calico](https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart#install-calico)
