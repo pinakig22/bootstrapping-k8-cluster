@@ -4,3 +4,5 @@ System requirements:
 - 2 GiB of RAM per machine.
 - At least 2 CPUs on the machine used as `control-plane` node.
 - Full network connectivity among all machines in the cluster. You can use either a public or a private network.
+
+![non-ha-arch](../media/non-ha-arch2.png)
