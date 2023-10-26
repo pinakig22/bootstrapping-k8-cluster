@@ -4,9 +4,9 @@ This setup is deployed on AWS. Details as below.
 This is in line with, _System Requirements_ defined under "Before You Begin" in "Creating a cluster with kubeadm" 
 in the reference.
 
-1. **AMI**: _Ubuntu Server 22.04 LTS (HVM), SSD Volume Type_ (`ami-0287a05f0ef0e9d9a`) (AMI IDs are different in different AWS region. This is from Mumbai region)
+1. **AMI**: _Ubuntu Server 22.04 LTS (HVM) for Control-plane and worker nodes, SSD Volume Type_ (`ami-0287a05f0ef0e9d9a`) (AMI IDs are different in different AWS region. This is from Mumbai region)
 2. **Instances**:
-   1. **Bastion Host**: Acts as jump host to connect to control and worker nodes.
+   1. **Bastion Host**: Acts as jump host to connect to control and worker nodes. This is using Amazon Linux 2 `ami-09de362f44ba0a166` (`amzn2-ami-hvm-2.0.20220606.1-x86_64-gp2`).
    2. 3 x **Control Nodes**: `t3a.medium`
    3. 3 x **Worker Nodes**: `t3a.small`
 3. All instances are managed via **Auto Scaling Group** and **Launch Templates**.

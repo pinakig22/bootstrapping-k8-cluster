@@ -7,6 +7,10 @@ System requirements:
 
 ![non-ha-arch](../media/non-ha-arch2.png)
 
+## Steps
+1. [Setup Infrastructure](1.%20INFRASTRUCTURE)
+2. [Node Setup](2.%20Node%20Setup)
+
 ## How `kubeadm` works
 When we initialize a Kubernetes cluster using `kubeadm init`, it does the following in order
 1. First it **runs all preflight checks** to validate the system state and downloads required cluster container images from **`registry.k8s.io`** registry.
@@ -21,8 +25,8 @@ When we initialize a Kubernetes cluster using `kubeadm init`, it does the follow
 
 ## K8 Cluster Important Configuration
 
-| **Configuration**                                                         | **Location**                  |
-|---------------------------------------------------------------------------|-------------------------------|
+| **Configuration** | **Location** |
+|-------------------|--------------|
 | Static Pods Location (etcd, api-server, controller manager and scheduler) | `/etc/kubernetes/manifests`   |
 | TLS Certificates (kubernetes-ca, etcd-ca and kubernetes-front-proxy-ca)   | `/etc/kubernetes/pki`         |
 | Admin Kubeconfig File                                                     | `/etc/kubernetes/admin.conf`  |
