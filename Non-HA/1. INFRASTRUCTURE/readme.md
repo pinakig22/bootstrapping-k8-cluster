@@ -32,7 +32,6 @@ in the reference.
    **Worker Node Egress**
    ![worker node egress](../../media/worker_node_egress.png)
 
-7. TBC
 
 ## References
 - [Creating a cluster with kubeadm](https://v1-27.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)
