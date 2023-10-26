@@ -16,6 +16,14 @@ When we initialize a Kubernetes cluster using `kubeadm init`, it does the follow
 5. It now **starts all the control plane components** from the static pod manifest files.
 6. Now **`coreDNS`** and **`kubeproxy`** are installed.
 7. Lastly, it **generates the node bootstrap token**. This token is used by `worker` node to **join** `control plane`.
-   
 
    ![init-steps](../media/kubeadm-init-steps.png)
+
+## K8 Cluster Important Configuration
+
+| **Configuration**                                                         | **Location**                  |
+|---------------------------------------------------------------------------|-------------------------------|
+| Static Pods Location (etcd, api-server, controller manager and scheduler) | `/etc/kubernetes/manifests`   |
+| TLS Certificates (kubernetes-ca, etcd-ca and kubernetes-front-proxy-ca)   | `/etc/kubernetes/pki`         |
+| Admin Kubeconfig File                                                     | `/etc/kubernetes/admin.conf`  |
+| Kubelet configuration                                                    | `/var/lib/kubelet/admin.conf` |

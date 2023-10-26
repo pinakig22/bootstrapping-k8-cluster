@@ -115,7 +115,7 @@ These pre-checks expose warnings and exit on errors.
 
 `kubeadm init` then downloads and installs the cluster control plane components. This may take several minutes. 
 
-After it finishes you should see as below:
+The following message is disabled which suggests the master node is successfully initialized and also provides the command to join worker node to the cluster.
 
 ![init](../../media/kubeadm-init.png)
 
@@ -216,6 +216,29 @@ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.3
 watch kubectl get pods -n calico-system
 ```
 
+## Add Worker Node to Master
+- On the Worker node, we have installed `cir-o`, `kubelet` and `kubeadm` utilities.
+- To join worker node to master we need to use the `kuebadm join` command mentioned in the output of `kubeadm init`.
+- If case the command was not copied or see the join command again
+  ```shell
+  kubeadm token create --print-join-command
+  
+  ## Example ##
+  ubuntu@master-1a:~$ kubeadm token create --print-join-command
+  kubeadm join 10.0.3.31:6443 --token 7wmwde.bpodgv39ubd6gvmb --discovery-token-ca-cert-hash sha256:f07c29adb12c1bd12aa2975c2d16fdc75c8607f74fbc5f2809cfa96681477e73
+  ubuntu@master-1a:~$
+  ```
+- Below is sample output when executed from worker node. Use **`sudo`** if you running as a normal user. This command performs the TLS bootstrapping for the nodes.
+
+  ![join](../../media/worker-join.png)
+- Verify the nodes in the cluster using `kubectl get nodes` from master node.
+  ```shell
+  ubuntu@master-1a:~$ kubectl get nodes
+  NAME        STATUS   ROLES           AGE     VERSION
+  master-1a   Ready    control-plane   30m     v1.27.6
+  worker-1a   Ready    <none>          9m34s   v1.27.6
+  ubuntu@master-1a:~$
+  ```
 
 ## References
 - [CRI-O Installation Instructions - Ubuntu](https://github.com/cri-o/cri-o/blob/main/install.md#apt-based-operating-systems)
