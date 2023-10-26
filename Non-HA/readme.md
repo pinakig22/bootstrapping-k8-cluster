@@ -6,3 +6,16 @@ System requirements:
 - Full network connectivity among all machines in the cluster. You can use either a public or a private network.
 
 ![non-ha-arch](../media/non-ha-arch2.png)
+
+## How `kubeadm` works
+When we initialize a Kubernetes cluster using `kubeadm init`, it does the following in order
+1. First it **runs all preflight checks** to validate the system state and downloads required cluster container images from **`registry.k8s.io`** registry.
+2. It then **generates the TLS Certificates** and stores them in **`/etc/kubernetes/pki`** folder.
+3. Next, it **generates all the** **`kubeconfig`** files for the cluster components in the **`/etc/kubernetes`** folder.
+4. It then **starts** the **`kubelet`** service, **generates the static pod manifests** for all the cluster components and stores them in **`/etc/kubernetes/manifests`** folder.
+5. It now **starts all the control plane components** from the static pod manifest files.
+6. Now **`coreDNS`** and **`kubeproxy`** are installed.
+7. Lastly, it **generates the node bootstrap token**. This token is used by `worker` node to **join** `control plane`.
+   
+
+   ![init-steps](../media/kubeadm-init-steps.png)
