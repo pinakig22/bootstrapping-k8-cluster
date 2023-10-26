@@ -269,10 +269,26 @@ kubectl get po -A
 - This should allow `kubectl` to connect to Remote Kubernetes cluster now. To test run the `kubectl version` command and it should list successful connection to master. Example output as below.
   ![kubectl-local](../../media/kubectl-local.png)
 
+## `kubectl cheat sheet`
+-  kubectl cheat sheet as in reference contains a list of commonly used kubectl commands and flags, some of which are mentioned below to get started. For more refer to the cheat sheet.
+
+  ```shell
+  ## Kubectl autocomplete ##
+  source <(kubectl completion bash) # set up autocomplete in bash into the current shell, bash-completion package should be installed first.
+  echo "source <(kubectl completion bash)" >> ~/.bashrc # add autocomplete permanently to your bash shell.
+  
+  ## Setup shorthand alias for kubectl with auto completion ##
+  alias k=kubectl
+  complete -o default -F __start_kubectl k
+  
+  ## Shorthand for --all-namespaces
+  kubectl -A
+  ```
 
 ## References
 - [CRI-O Installation Instructions - Ubuntu](https://github.com/cri-o/cri-o/blob/main/install.md#apt-based-operating-systems)
 - [Installing Kubernetes 1.27](https://v1-27.docs.kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
 - [Installing `kubectl`](https://v1-27.docs.kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+- [`kubectl cheat sheet`](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 - [Installing Addons (Pod Network addons)](https://kubernetes.io/docs/concepts/cluster-administration/addons/)
 - [Install Calico](https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart#install-calico)
