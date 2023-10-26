@@ -214,6 +214,10 @@ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.3
 ## Confirm that all of the pods are running with the following command. ##
 ## Wait until each pod has the STATUS of Running. ##
 watch kubectl get pods -n calico-system
+
+## OR ## 
+
+kubectl get po -A
 ```
 
 ## Add Worker Node to Master
@@ -239,6 +243,32 @@ watch kubectl get pods -n calico-system
   worker-1a   Ready    <none>          9m34s   v1.27.6
   ubuntu@master-1a:~$
   ```
+
+## Configure `kubectl` to run outside from cluster
+> **Note**:
+> - The non-HA setup has control and worker nodes running with private IPs.
+> - `kubectl` is setup on Bastion node
+> - Security Group of control node should allow access on port 6443 to Bastion Host.
+
+- `Kubectl` uses a config file you must have to connect to the cluster.
+- Configure Control Plane SG to allow access from Bastion node on port 6443 as below
+  ![bastion-access](../../media/control-node-sg.png)
+- Install `kubectl` as per instructions in [Install and setup kubectl on Linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
+  - Sub-pages under parent page [Install Tools](https://kubernetes.io/docs/tasks/tools/) provide instructions to install on macOS and Windows. 
+- **Download Kubernetes config From control node**:
+  > **This is not an ideal way and a proper method will be updated later.**
+  ```shell
+  ## Example
+  scp -r -i mumbai-key-pair.pem ubuntu@10.0.47.147/home/ubuntu/.kube/config .
+  ```
+- **Copy the Kubernetes Credentials your downloaded to your home directory**
+
+  ```shell
+  cp -r .kube $HOME/
+  ```
+- This should allow `kubectl` to connect to Remote Kubernetes cluster now. To test run the `kubectl version` command and it should list successful connection to master. Example output as below.
+  ![kubectl-local](../../media/kubectl-local.png)
+
 
 ## References
 - [CRI-O Installation Instructions - Ubuntu](https://github.com/cri-o/cri-o/blob/main/install.md#apt-based-operating-systems)
