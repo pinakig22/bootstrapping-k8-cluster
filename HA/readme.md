@@ -1,4 +1,7 @@
 # High Availability Architecture
+
+> WORK IN PROGRESS
+
 To achieve **High Availability**, following is the setup:
 - **3 Control Plane** nodes (Master node).
   - `ETCD` deployed in **stacked** mode.
