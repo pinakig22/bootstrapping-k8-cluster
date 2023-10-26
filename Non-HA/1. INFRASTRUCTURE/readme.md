@@ -16,7 +16,7 @@ in the reference.
    2. 1 x **Public**: _Bastion_ host is launched in **Public** Subnet.
 5. NAT Gateway is launched in **Public Subnet** and associated with Private Subnet Route for any traffic outside AWS internal network.
    1. Public IP Allocation is required during NAT GW creation.
-   > **Note:** Make sure to delete the NAT GW and release Public IP to avoid high AWS Cost.
+   > **Note: Make sure to delete the NAT GW and release Public IP to avoid high AWS Cost.**
 
 6. **Security Groups** are created as defined in Kubernetes documentation [Ports and Protocols](https://kubernetes.io/docs/reference/networking/ports-and-protocols/). Reference as below.
    
