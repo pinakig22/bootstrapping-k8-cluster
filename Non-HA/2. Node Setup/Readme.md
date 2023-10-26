@@ -175,7 +175,9 @@ kubeadm init --apiserver-advertise-address=$IPADDR  --apiserver-cert-extra-sans=
 ## Only the IPADDR variables is the only change in comparison to above. ##
 IPADDR=$(curl ifconfig.me && echo "")
 
-## Configure kubeconfig ##
+######################## 
+# Configure kubeconfig #
+########################
 ## These instructions are part of output once Kubernetes control plane (using kubeadm init as above) is successfully initialized.
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -183,6 +185,20 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ### If doing as root user ###
 export KUBECONFIG=/etc/kubernetes/admin.conf
+
+#################
+# Verification  #
+#################
+## verify kubeconfig ##
+kubectl get po -n kube-system
+
+## Verify all cluster components are healthy ##
+kubectl get --raw='/readyz?verbose'
+
+## Get cluster info ##
+kubectl cluster-info
+
+## Note: By default, apps won’t get scheduled on the master node. ##
 ```
 
 ## Install Network Add-on
