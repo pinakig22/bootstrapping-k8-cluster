@@ -1,8 +1,0 @@
-.idea
-.idea/*
-.terraform
-.terraform/*
-.plan
-terraform.tfstate
-terraform.tfstate.backup
-vpc-only
